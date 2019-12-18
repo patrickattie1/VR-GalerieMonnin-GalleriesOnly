@@ -13,6 +13,7 @@ namespace UT.MailSample
     /// </summary>
     public class UTMailSample1 : MonoBehaviour
     {
+
         [Header("SMTP Settings for Sample Sending")]
         [Tooltip("Sender's full email address, f.e. myaddress@gmail.com")]
         public string EmailAddress = "patrick.attie@esih.edu";

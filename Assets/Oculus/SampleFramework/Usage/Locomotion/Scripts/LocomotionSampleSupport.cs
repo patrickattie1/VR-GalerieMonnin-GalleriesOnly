@@ -32,13 +32,11 @@ public class LocomotionSampleSupport : MonoBehaviour
     public void Start()
     {
         lc = FindObjectOfType<LocomotionController>();
-
-        ////*****Those are commented out as we do not want the menu anymore (it confuses the user)*****
-        //////DebugUIBuilder.instance.AddButton("Node Teleport w/ A", SetupNodeTeleport);
-        /////DebugUIBuilder.instance.AddButton("Dual-stick teleport", SetupTwoStickTeleport);
-        //////DebugUIBuilder.instance.AddButton("L Strafe R Teleport", SetupLeftStrafeRightTeleport);
+        DebugUIBuilder.instance.AddButton("Node Teleport w/ A", SetupNodeTeleport);
+        DebugUIBuilder.instance.AddButton("Dual-stick teleport", SetupTwoStickTeleport);
+        DebugUIBuilder.instance.AddButton("L Strafe R Teleport", SetupLeftStrafeRightTeleport);
         //DebugUIBuilder.instance.AddButton("R Turn L Teleport", SetupRightTurnLeftTeleport);
-        //////DebugUIBuilder.instance.AddButton("Walk Only", SetupWalkOnly);
+        DebugUIBuilder.instance.AddButton("Walk Only", SetupWalkOnly);
 
         // This is just a quick hack-in, need a prefab-based way of setting this up easily.
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
@@ -46,8 +44,7 @@ public class LocomotionSampleSupport : MonoBehaviour
         {
             Debug.LogError("Need EventSystem");
         }
-
-        SetupNodeTeleport();//////We want to use the Teleport Node (with teleport points) AND the walk only function as well in the scene.
+		SetupTwoStickTeleport();
 
         // SAMPLE-ONLY HACK:
         // Due to restrictions on how Unity project settings work, we just hackily set up default
@@ -64,8 +61,6 @@ public class LocomotionSampleSupport : MonoBehaviour
             else DebugUIBuilder.instance.Show();
             inMenu = !inMenu;
         }
-
-        SetupNodeTeleport();//////Not sure this one is necessary
     }
 
     [Conditional("DEBUG_LOCOMOTION_PANEL")]
@@ -194,7 +189,7 @@ public class LocomotionSampleSupport : MonoBehaviour
         hmd.TeleportButton = OVRInput.RawButton.A;
 
         var orient = TeleportController.GetComponent<TeleportOrientationHandlerThumbstick>();
-        orient.Thumbstick = OVRInput.Controller.LTouch;     
+        orient.Thumbstick = OVRInput.Controller.LTouch;
     }
 
 
@@ -220,11 +215,6 @@ public class LocomotionSampleSupport : MonoBehaviour
         input.AimingController = OVRInput.Controller.RTouch;
         //var input = TeleportController.GetComponent<TeleportAimHandlerLaser>();
         //input.AimingController = OVRInput.Controller.RTouch;
-
-        //////Hacked(added) by me to have the walk only feature ALSO in this method
-        /// TeleportController.enabled = false;
-        lc.PlayerController.EnableLinearMovement = true;
-        //////lc.PlayerController.RotationEitherThumbstick = false;
     }
 
     // Symmetrical controls. Forward or back on stick initiates teleport, then stick allows orient.
@@ -241,8 +231,7 @@ public class LocomotionSampleSupport : MonoBehaviour
         var input = TeleportController.GetComponent<TeleportInputHandlerAvatarTouch>();
         input.InputMode = TeleportInputHandlerAvatarTouch.InputModes.ThumbstickTeleportForwardBackOnly;
         input.AimingController = OVRInput.Controller.Touch;
-        ActivateHandlers<TeleportInputHandlerAvatarTouch, TeleportAimHandlerParabolic, TeleportTargetHandlerPhysical, 
-            TeleportOrientationHandlerThumbstick, TeleportTransitionBlink>();
+        ActivateHandlers<TeleportInputHandlerAvatarTouch, TeleportAimHandlerParabolic, TeleportTargetHandlerPhysical, TeleportOrientationHandlerThumbstick, TeleportTransitionBlink>();
         var orient = TeleportController.GetComponent<TeleportOrientationHandlerThumbstick>();
         orient.Thumbstick = OVRInput.Controller.Touch;
     }

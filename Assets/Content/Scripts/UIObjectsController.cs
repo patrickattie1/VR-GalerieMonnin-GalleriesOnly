@@ -11,6 +11,7 @@ namespace UT.MailSample
     {
         //To manage timer for activating button when "looked at"
         const float nSecond = 2f;
+
         float timer = 0;
         bool entered = false;
 
@@ -73,10 +74,10 @@ namespace UT.MailSample
             }
         }
 
-        //public void ChangeScene(string sceneName)
-        //{
-        //  SceneManager.LoadScene(sceneName);
-        //}
+        public void ChangeScene(string sceneName)
+        {
+          SceneManager.LoadScene(sceneName);
+        }
 
         public void Terminer()
         {
