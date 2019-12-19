@@ -43,6 +43,9 @@ public class XRGrabAndRelease : MonoBehaviour
             if (m_CollidingObject != null)
             {
                 Grab();
+
+                //Check if m_CollidingObject is colliding with the cart
+                //if it is, the make the colliding object a child of the cart.
             }
             //Prevents from running this code(e.g. m_animator.setBool("Close Hand", true) and Grab()) every frame(e.g. 90x per second)
             gripHeld = true;
