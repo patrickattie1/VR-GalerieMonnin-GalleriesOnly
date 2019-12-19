@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ReceiveResult : MonoBehaviour
-{
+public class ReceiveResult : MonoBehaviour {
+
 	// Use this for initialization
-	void Start ()
-    {
+	void Start () {
         //GameObject.Find("Text").GetComponent<Text>().text = "You need to be connected to Internet";
 	}
 	
-    void onActivityResult(string recognizedText)
-    {
+    void onActivityResult(string recognizedText){
         char[] delimiterChars = {'~'};
         string[] result = recognizedText.Split(delimiterChars);
 
@@ -20,5 +18,11 @@ public class ReceiveResult : MonoBehaviour
         //And access a particular result with result[i] where i is an int
         //I have just assigned the best result to UI text
         GameObject.Find("Text").GetComponent<Text>().text = result[0];
+
     }
+
+	// Update is called once per frame
+	void Update () {
+		
+	}
 }
