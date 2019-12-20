@@ -7,6 +7,7 @@ public class XRGrabAndRelease : MonoBehaviour
 {
     private GameObject m_CollidingObject;
     private GameObject m_HeldObject;
+    public GameObject m_Cart;
 
     //This is a reference to the Animator component attached to the VRHand object in the Hierarchy
     public Animator animator;
@@ -43,9 +44,6 @@ public class XRGrabAndRelease : MonoBehaviour
             if (m_CollidingObject != null)
             {
                 Grab();
-
-                //Check if m_CollidingObject is colliding with the cart
-                //if it is, the make the colliding object a child of the cart.
             }
             //Prevents from running this code(e.g. m_animator.setBool("Close Hand", true) and Grab()) every frame(e.g. 90x per second)
             gripHeld = true;
@@ -72,6 +70,9 @@ public class XRGrabAndRelease : MonoBehaviour
 
     void Release() //Release colliding object
     {
+        ////Fill up the cart with the grabbed signs game objects
+        m_HeldObject.transform.SetParent(m_Cart.transform); ////Make the grabbed sign a child of the Cart game object so that it moves with the cart
+
         m_HeldObject.transform.SetParent(null);
         m_HeldObject.GetComponent<Rigidbody>().isKinematic = false;
         m_HeldObject = null;
