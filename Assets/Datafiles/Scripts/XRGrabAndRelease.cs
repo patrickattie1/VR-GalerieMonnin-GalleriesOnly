@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.XR;
 using UnityEngine;
 
 //Tell what hands are touching and use right click to grab object.
@@ -7,7 +8,7 @@ public class XRGrabAndRelease : MonoBehaviour
 {
     private GameObject m_CollidingObject;
     private GameObject m_HeldObject;
-    public GameObject m_Cart;
+    public  GameObject m_Cart;
 
     //This is a reference to the Animator component attached to the VRHand object in the Hierarchy
     public Animator animator;
@@ -17,6 +18,11 @@ public class XRGrabAndRelease : MonoBehaviour
     public string gripInputName;
     //Used to determine if we are already holding the object. Prevent the Update Loop to run the code 90x/sec.
     private bool gripHeld;
+
+    private void Start()
+    {
+        XRDevice.SetTrackingSpaceType(TrackingSpaceType.RoomScale); //Make sure floor level on Quest is correct
+    }
 
     private void OnTriggerStay(Collider other) //Other object has to have a RigidBody
     {
@@ -70,11 +76,11 @@ public class XRGrabAndRelease : MonoBehaviour
 
     void Release() //Release colliding object
     {
-        ////Fill up the cart with the grabbed signs game objects
-        m_HeldObject.transform.SetParent(m_Cart.transform); ////Make the grabbed sign a child of the Cart game object so that it moves with the cart
-
         m_HeldObject.transform.SetParent(null);
-        m_HeldObject.GetComponent<Rigidbody>().isKinematic = false;
+       // m_HeldObject.GetComponent<Rigidbody>().isKinematic = false; //To make sure the sign remains where it was placed in the cart
         m_HeldObject = null;
+
+        ////Fill up the cart with the grabbed signs game objects
+        m_CollidingObject.transform.SetParent(m_Cart.transform); ////Make the grabbed sign a child of the Cart game object so that it moves with the cart
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class CartRolling : MonoBehaviour
 {
@@ -8,9 +9,9 @@ public class CartRolling : MonoBehaviour
 
     private void Start()
     {
+        StartCoroutine("Delay");
         aSource = GetComponent<AudioSource>();
         transform.hasChanged = false;
-        StartCoroutine("Delay");
     }
 
     private void LateUpdate()

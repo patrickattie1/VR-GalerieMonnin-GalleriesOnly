@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.XR;
 using UnityEngine;
 
 //This script is attached to the Left Hand of the VRRig
@@ -12,7 +13,13 @@ public class XRLocomotion : MonoBehaviour
     //Define what layer to sense as floor height. 
     //Do not forget to fill up this slot in the Inspector by selecting Terrain in the drop-down list
     //  Note: Nothing means that the RayCast will hit nothing.
-    public LayerMask raycastMask; 
+    public LayerMask raycastMask;
+
+    private void Start()
+    {
+        XRDevice.SetTrackingSpaceType(TrackingSpaceType.RoomScale); //Make sure floor level on Quest is correct
+    }
+
 
     // Update is called once per frame
     void Update()
