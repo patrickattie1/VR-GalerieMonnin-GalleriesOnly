@@ -15,12 +15,6 @@ public class XRLocomotion : MonoBehaviour
     //  Note: Nothing means that the RayCast will hit nothing.
     public LayerMask raycastMask;
 
-    private void Start()
-    {
-        XRDevice.SetTrackingSpaceType(TrackingSpaceType.RoomScale); //Make sure floor level on Quest is correct
-    }
-
-
     // Update is called once per frame
     void Update()
     {

@@ -19,11 +19,6 @@ public class XRGrabAndRelease : MonoBehaviour
     //Used to determine if we are already holding the object. Prevent the Update Loop to run the code 90x/sec.
     private bool gripHeld;
 
-    private void Start()
-    {
-        XRDevice.SetTrackingSpaceType(TrackingSpaceType.RoomScale); //Make sure floor level on Quest is correct
-    }
-
     private void OnTriggerStay(Collider other) //Other object has to have a RigidBody
     {
         if (other.GetComponent<Rigidbody>())
