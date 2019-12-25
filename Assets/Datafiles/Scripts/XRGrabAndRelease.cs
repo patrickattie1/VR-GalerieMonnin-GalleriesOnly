@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.XR;
 using UnityEngine;
+using System.Data.SQLite;
 
 //Tell what hands are touching and use right click to grab object.
 public class XRGrabAndRelease : MonoBehaviour
@@ -18,6 +19,29 @@ public class XRGrabAndRelease : MonoBehaviour
     public string gripInputName;
     //Used to determine if we are already holding the object. Prevent the Update Loop to run the code 90x/sec.
     private bool gripHeld;
+
+    SQLiteCommand command;
+
+    void Start()
+    {
+        //Opens a new SQLite connection to a database in the directory C:\Users\PATRI\Documents
+        //The name of the database is SQLiteDB.db (if the file does not exist, then it will be created)
+        SQLiteConnection connection =
+                         new SQLiteConnection(@"Data Source=C:\Users\PATRI\Documents\VisitorsData.db;Version=3;");
+
+        connection.Open();
+
+        command = connection.CreateCommand();
+
+        //Creates a new table with the name highscores and fields id, name, and score.
+        command.CommandType = System.Data.CommandType.Text;
+        command.CommandText = "CREATE TABLE IF NOT EXISTS 'VisitorsSelections' ( " +
+                          "  'id' INTEGER PRIMARY KEY, " +
+                          "  'visitorName' TEXT NOT NULL, " +
+                          "  'artistName' TEXT NOT NULL, " +
+                          "  'signText' TEXT NOT NULL " +
+                          ");";
+    }
 
     private void OnTriggerStay(Collider other) //Other object has to have a RigidBody
     {
@@ -71,6 +95,8 @@ public class XRGrabAndRelease : MonoBehaviour
 
     void Release() //Release colliding object
     {
+        command.CommandText = "INSERT INTO VisitorsSelections (id, visitorName, artistName, signText) VALUES (1, 'Patrick ATTIE', 'Roberto STEPHENSON', 'Bul Futbol')";
+
         m_HeldObject.transform.SetParent(null);
        // m_HeldObject.GetComponent<Rigidbody>().isKinematic = false; //To make sure the sign remains where it was placed in the cart
         m_HeldObject = null;
