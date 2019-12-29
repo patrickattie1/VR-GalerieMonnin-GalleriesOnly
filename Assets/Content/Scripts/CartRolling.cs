@@ -18,7 +18,6 @@ public class CartRolling : MonoBehaviour
     {
         if (transform.hasChanged)
         {
-            Debug.Log("Play");
             aSource.Play();
             transform.hasChanged = false;
         }
