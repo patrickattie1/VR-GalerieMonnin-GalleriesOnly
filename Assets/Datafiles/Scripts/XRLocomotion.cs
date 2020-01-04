@@ -7,6 +7,7 @@ using UnityEngine;
 public class XRLocomotion : MonoBehaviour
 {
     public string trackpadAxisX, trackpadAxisY; // Need inputs defined for the trackpad/joystick inputs
+    public string trackpadPress; //For speed increase
 
     public Transform vrRig; // Moving rig, just like in teleport!
 
@@ -15,9 +16,20 @@ public class XRLocomotion : MonoBehaviour
     //  Note: Nothing means that the RayCast will hit nothing.
     public LayerMask raycastMask;
 
+    private float movingSpeed = 3.0f;
+
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetButton(trackpadPress))
+        {
+            movingSpeed = 3.0f;
+        }
+        else
+        {
+            movingSpeed = 1.0f;
+        }
+
         // Record the position on the x and y axis of where the thum is placed on trackpad (or where joystic pushed)
         float trackpadX = Input.GetAxis(trackpadAxisX); //  number representing the amount/speed to move left/right
         float trackpadY = Input.GetAxis(trackpadAxisY); //  number representing the amount/speed to move Forward/back
@@ -27,7 +39,7 @@ public class XRLocomotion : MonoBehaviour
         Vector3 right   = new Vector3(transform.right.x, 0f, transform.right.z) * trackpadY;     // the direction pointing to the right of the controller 
         
         // Apply motion now to the rig!
-        vrRig.transform.position = vrRig.transform.position + (forward + right) * Time.deltaTime;
+        vrRig.transform.position = vrRig.transform.position + (forward + right) * Time.deltaTime * movingSpeed;
 
         float floorHeight = GetFloorHeight(); // Get the floor height
         Vector3 rigPosition = vrRig.position; // Take note of the current rig positon, so we can edit the y-value 

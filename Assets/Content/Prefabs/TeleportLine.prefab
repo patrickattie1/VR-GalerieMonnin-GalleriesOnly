@@ -70,7 +70,7 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: -0.0051702214, y: 0.456, z: -0.70523614}
+  - {x: 1.571, y: 1.7500004, z: 3.734}
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3

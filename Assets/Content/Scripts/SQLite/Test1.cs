@@ -22,7 +22,6 @@ public class Test1 : MonoBehaviour
     private IDbConnection dbConnection;
     private string description;
 
-
     private void Awake()
     {
         connectionPath = "URI=file:" + Path.Combine(Application.persistentDataPath, "VisitorsData.sqlite");

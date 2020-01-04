@@ -145,44 +145,4 @@ public class XRGrabAndRelease : MonoBehaviour
 
         commandToInsertValues.ExecuteNonQuery();
     }
-
-    void CalculateStatistics()
-    {
-        GetChoicesCountPerArtistName("Roberto Stephenson");
-        GetChoicesCountPerArtistName("Vizal Babo");
-        GetChoicesCountPerVisitorName("Patrick ATTIE");
-        GetChoicesCountPerVisitorName("Yann ATTIE");
-    }
-
-    //*************Lists of query functions**************
-
-    private void GetChoicesCountPerArtistName(string aName)
-    {
-        IDbCommand commandToCreateQuery = dbConnection.CreateCommand();
-        commandToCreateQuery.CommandText = "SELECT COUNT (id) FROM VisitorsChoices WHERE artistName = @aName";
-        commandToCreateQuery.Parameters.Add(new SqliteParameter("@aName", aName));
-        IDataReader reader;
-        reader = commandToCreateQuery.ExecuteReader();
-
-        while (reader.Read())
-        {
-            Debug.Log("id: "  + reader[0].ToString());
-            Debug.Log("The artist " + aName + "has been selected " + reader[1].ToString() + "times.");
-        }
-    }
-
-    private void GetChoicesCountPerVisitorName(string vName)
-    {
-        IDbCommand commandToCreateQuery = dbConnection.CreateCommand();
-        commandToCreateQuery.CommandText = "SELECT COUNT (id) FROM VisitorsChoices WHERE artistName = @vName";
-        commandToCreateQuery.Parameters.Add(new SqliteParameter("@vName", vName));
-        IDataReader reader;
-        reader = commandToCreateQuery.ExecuteReader();
-
-        while (reader.Read())
-        {
-            Debug.Log("id: " + reader[0].ToString());
-            Debug.Log("The visitor " + vName + "has made " + reader[1].ToString() + "choices.");
-        }
-    }
 }
