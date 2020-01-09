@@ -18,6 +18,9 @@ public class Statistics : MonoBehaviour
     public Text PAText;
     public Text YAText;
 
+    //We need the vrRig object to make sure the canvas "looks" at it when displayed
+    public GameObject vrRig;
+
     public Canvas statisticsCanvas;
 
     private void Awake()
@@ -54,6 +57,10 @@ public class Statistics : MonoBehaviour
     public void DisplayStatisticsCanvas(bool canvasVisible)
     {
         statisticsCanvas.gameObject.SetActive(canvasVisible); //Make the stats canvas visible/invisible
+
+        //Make sure the stats canvas is always directed towards the VRRig for easy reading
+        statisticsCanvas.transform.LookAt(vrRig.transform.position);
+        statisticsCanvas.transform.Rotate(Vector3.up, 180);
 
         if (canvasVisible == true)
         {

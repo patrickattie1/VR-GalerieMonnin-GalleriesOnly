@@ -49,7 +49,7 @@ public class XRLaserSelection : MonoBehaviour
         //This code should only run when we press the index trigger button (which is an axis providing a value from 0 to 1)
         //if ( (Input.GetAxis(laserButtonName)>0.5f  && triggerPulled == false) )
 
-        if (Input.GetAxis(laserButtonName)>0.5f)
+        if (Input.GetAxis(laserButtonName)> 0.5f)
         {
             //triggerPulled = true;
             line.enabled = true; //Activate the Line renderer object so that it is visible
@@ -68,7 +68,8 @@ public class XRLaserSelection : MonoBehaviour
             }
             else //Handling the case when no collider is hit (still want to draw laser pointer)
             {
-                line.SetPosition(1, this.transform.forward * 100f); //Set the line's end to infinity
+                //Writing line.SetPosition(1, this.transform.forward * 100f) is wrong!
+                line.SetPosition(1, this.transform.position + transform.forward * 300f); //Set the line's end to infinity
             }
         }
         //This code should only run when we release the laser button. If button is released, lets display 

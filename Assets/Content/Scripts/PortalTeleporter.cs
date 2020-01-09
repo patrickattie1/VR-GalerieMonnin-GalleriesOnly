@@ -18,7 +18,6 @@ public class PortalTeleporter : MonoBehaviour
     {
         if (playerIsOverlapping)
         {
-            Debug.Log("playerIsOverlapping is true");
             //We need to make sure the Player is entering the portal from the right side.
             //We will use the dot product to achieve this.
             Vector3 portalToPlayer = player.position - transform.position;
@@ -40,7 +39,8 @@ public class PortalTeleporter : MonoBehaviour
                 //Current offset between the player and the start portal. Make sure it is also rotated when applied.
                 //  (this vector has already been calculated before with the portalToPlayer vector).
                 Vector3 positionOffset = Quaternion.Euler(0f, rotationDifference, 0f) * portalToPlayer;
-                player.position = receiverPortal.position + positionOffset;
+                //Make sure the Player is teleported a few meters further than the ReceiveRPortal so that it does not loop back and forth between portals.
+                player.position = receiverPortal.position + positionOffset - receiverPortal.forward * 3.0f; ;
                 Debug.Log("player.position is: " + player.position);
 
                 playerIsOverlapping = false;
@@ -54,7 +54,6 @@ public class PortalTeleporter : MonoBehaviour
 
         if (other.tag == "Player")
         {
-            Debug.Log("tag is Player");
             playerIsOverlapping = true;
         }
     }
