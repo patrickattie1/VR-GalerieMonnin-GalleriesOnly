@@ -42,7 +42,7 @@ public class XRLocomotion : MonoBehaviour
         vrRig.transform.position = vrRig.transform.position + (forward + right) * Time.deltaTime * movingSpeed;
 
         float floorHeight = GetFloorHeight(); // Get the floor height
-        Vector3 rigPosition = vrRig.position; // Take note of the current rig positon, so we can edit the y-value 
+        Vector3 rigPosition = vrRig.position; // Take note of the current rig position, so we can edit the y-value 
         rigPosition.y = floorHeight; // Change the y-value
         vrRig.transform.position = rigPosition; // Now we have the xrRig position with the y-value updated, so apply it back to the rig's position
 

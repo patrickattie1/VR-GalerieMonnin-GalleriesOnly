@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 //Attach this script to the Left Hand
 //This script will use the LineRenderer as a visual for the player to select objects (here the Statcube object).
 //Note: vrRig is the position of our feet.
 public class XRLaserSelection : MonoBehaviour
 {
-    //We are moving th XRRig, so we need a reference to it
-    public Transform Rig; //Fill up the slot in the Inspector
+    //We are moving the VRRig, so we need a reference to it
+    public Transform vrRig; //Fill up the slot in the Inspector
 
     //We want the LineRenderer to point where we are pointing
     public LineRenderer line; //Fill up the slot in the Inspector
@@ -16,10 +18,17 @@ public class XRLaserSelection : MonoBehaviour
     //We need an axis name
     public string laserButtonName; //Fill up the slot in the Inspector with the Button's name
 
-    //Last position hit by the RayCast
-    Vector3 hitPosition; //A Vector3 declaration always initialises the vector to the origin
+    //A list of all transforms for the 360 spheres. Used when user is pointing laser at the "Next" panel inside the sphere.
+    public List<Transform> listOf360SpheresTransforms = new List<Transform>();
 
-    //When linerenderer hits this cube, we show the canvas.
+    //We need the initial positions at the entries of each gallery
+    public Transform inFrontOfPM;
+    public Transform inFrontOfRS;
+
+    //Last position hit by the RayCast
+    private Vector3 hitPosition; //A Vector3 declaration always initialises the vector to the origin
+
+    //When linerenderer hits this stats cube, we show the canvas.
     private GameObject cubeGO;
 
     private bool triggerPulled = false;
@@ -56,15 +65,12 @@ public class XRLaserSelection : MonoBehaviour
 
             //Gather information on the collider we are pointing at and perform a RayCast (a function in the Physics class)
             //Did we hit the collider of an object in the scene? If yes, run the code in the if statement
-            if (Physics.Raycast(this.transform.position, this.transform.forward, out hit, 70f))
+            if (Physics.Raycast(this.transform.position, this.transform.forward, out hit, 300f))
             {
                 line.SetPosition(1, hit.point); //Reset the end of the line to new end point 
 
-                if (hit.transform.tag == "StatCube")
-                {
-                    //Display the StatisticsCanvas
-                    cubeGO.GetComponent<Statistics>().DisplayStatisticsCanvas(true);
-                }
+                //Action depending on which object has been hit
+                ManageRaycast(hit);
             }
             else //Handling the case when no collider is hit (still want to draw laser pointer)
             {
@@ -76,11 +82,70 @@ public class XRLaserSelection : MonoBehaviour
         //   the StatisticsCanvas (and disable the laser)
         else if (Input.GetAxis(laserButtonName)<0.5f)
         {
-            line.enabled = false; //Disable the laser line. Check the corresponding slot in the Inspector.
-            //triggerPulled = false;
+            //Disable the laser line. Check the corresponding slot in the Inspector
+            line.enabled = false;
+
             //Deactivate the StatisticsCanvas
             cubeGO.GetComponent<Statistics>().DisplayStatisticsCanvas(false);
         }
+    }
 
+    private void ManageRaycast(RaycastHit h)
+    {
+        switch (h.transform.tag)
+        {
+            case "StatCube":
+                //Display the StatisticsCanvas
+                cubeGO.GetComponent<Statistics>().DisplayStatisticsCanvas(true);
+                break;
+
+            //Moving VRRig to next room
+            case "GoToNext":
+                //The Next sign inside the current sphere has been hit
+                //Remember that the list is a list of Transform, not a list of GameObject
+                //NOTE: Do not use the GetComponentInParent() method as it will start searching on the given object and not on the first
+                // parent. So using this method to find a Transform will return the Transform of the object and not of the parent.
+                Transform go = h.transform.parent; //Get the parent's transform (the transform of the sphere gameobject) of the hit sign
+
+                //Get the index of the current room's transform s(360 sphere) in the list for the "go" transform
+                int indexOfCurrent360Sphere = listOf360SpheresTransforms.IndexOf(go);
+
+                //If all rooms have been visited, reset the index to start from the beginning again
+                if (indexOfCurrent360Sphere == 16)
+                {
+                    indexOfCurrent360Sphere = -1;
+                }
+
+                if (go != null)
+                {
+                    //Wait 2s before going to next room
+                    StartCoroutine(DelayRoutine(2.0f));
+
+                    //Move the vrRig to the next position (next room or next index in the list)
+                    vrRig.transform.position = listOf360SpheresTransforms[indexOfCurrent360Sphere + 1].position;
+                }
+                break;
+
+            //The Pascale Monnin sign inside the current sphere has been hit
+            case "GoToPM":
+                //Wait 2s before going in front of PM's gallery
+                StartCoroutine(DelayRoutine(2.0f));
+                //Move the vrRig to the next position (next room or next index in the list)
+                vrRig.transform.position = inFrontOfPM.position;
+                break;
+
+            //The Roberto Stephenson sign inside the current sphere has been hit
+            case "GoToRS":
+                //Wait 2s before going in front of PM's gallery
+                StartCoroutine(DelayRoutine(2.0f));
+                //Move the vrRig to the next position (next room or next index in the list)
+                vrRig.transform.position = inFrontOfRS.position;
+                break;
+        }
+    }
+
+    private IEnumerator DelayRoutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
     }
 }

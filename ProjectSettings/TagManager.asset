@@ -7,6 +7,11 @@ TagManager:
   - StatCube
   - projectile
   - FxTemporaire
+  - Fire
+  - GoToPM
+  - GoToRS
+  - GoToNext
+  - EnterProperty
   layers:
   - Default
   - TransparentFX
