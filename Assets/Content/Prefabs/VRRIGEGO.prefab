@@ -147,6 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trackpadAxisX: Right Trackpad Y
   trackpadAxisY: Right Trackpad X
+  trackpadPress: 
   vrRig: {fileID: 5398173475978530880}
   raycastMask:
     serializedVersion: 2
@@ -264,6 +265,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trackpadAxisX: Left Trackpad Y
   trackpadAxisY: Left Trackpad X
+  trackpadPress: Left Trackpad Press
   vrRig: {fileID: 5398173475978530880}
   raycastMask:
     serializedVersion: 2

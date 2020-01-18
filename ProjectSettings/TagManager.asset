@@ -12,6 +12,7 @@ TagManager:
   - GoToRS
   - GoToNext
   - EnterProperty
+  - PerUserStatCube
   layers:
   - Default
   - TransparentFX

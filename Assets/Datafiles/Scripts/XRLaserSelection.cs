@@ -29,7 +29,7 @@ public class XRLaserSelection : MonoBehaviour
     private Vector3 hitPosition; //A Vector3 declaration always initialises the vector to the origin
 
     //When linerenderer hits this stats cube, we show the canvas.
-    private GameObject cubeGO;
+    private GameObject cubeGO, cubePerVisitorGO;
 
     private bool triggerPulled = false;
 
@@ -40,7 +40,8 @@ public class XRLaserSelection : MonoBehaviour
 
     private void Start()
     {
-        cubeGO = GameObject.FindGameObjectWithTag("StatCube");
+        cubeGO = GameObject.FindGameObjectWithTag("StatCube"); //For aggregated stats
+        cubePerVisitorGO = GameObject.FindGameObjectWithTag("PerUserStatCube"); //For stats per visitor
 
         line.enabled = false;
         triggerPulled = false;
@@ -99,6 +100,11 @@ public class XRLaserSelection : MonoBehaviour
                 cubeGO.GetComponent<Statistics>().DisplayStatisticsCanvas(true);
                 break;
 
+            case "PerUserStatCube":
+                //Display the StatisticsCanvasPerUser
+                cubePerVisitorGO.GetComponent<StatisticsCanvasPerUser>().DisplayStatisticsCanvas(true);
+                break;
+
             //Moving VRRig to next room
             case "GoToNext":
                 //The Next sign inside the current sphere has been hit
@@ -126,7 +132,8 @@ public class XRLaserSelection : MonoBehaviour
                 }
                 break;
 
-            //The Pascale Monnin sign inside the current sphere has been hit
+                //Moving VRRig to the entrance of the P. Monnin gallery 
+                // (meaning that the P. Monnin sign inside the sphere has been hit by the raycast (laser))
             case "GoToPM":
                 //Wait 2s before going in front of PM's gallery
                 StartCoroutine(DelayRoutine(2.0f));
@@ -134,7 +141,8 @@ public class XRLaserSelection : MonoBehaviour
                 vrRig.transform.position = inFrontOfPM.position;
                 break;
 
-            //The Roberto Stephenson sign inside the current sphere has been hit
+            //Moving VRRig to the entrance of the R. Stephenson gallery
+            // (meaning that the R. Stephenson sign inside the sphere has been hit by the raycast (laser))
             case "GoToRS":
                 //Wait 2s before going in front of PM's gallery
                 StartCoroutine(DelayRoutine(2.0f));

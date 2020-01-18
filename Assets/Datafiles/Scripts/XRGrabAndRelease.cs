@@ -14,7 +14,9 @@ public class XRGrabAndRelease : MonoBehaviour
     public  GameObject m_Cart;
 
     //For the SQLite needs
-    public string visitor = "Patrick ATTIE";
+    //Static variable to make it accessible from the StatisticsCanvasPerUser.cs script
+    public static string visitor = "Patrick ATTIE";
+
     //private string photoDescription;
     private string artist, product, price;
 
