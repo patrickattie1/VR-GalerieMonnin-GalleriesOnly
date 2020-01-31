@@ -4,13 +4,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-//Attach this script to the Left Hand
-//This script will use the LineRenderer as a visual for the player to select objects (here the Statcube object).
+//Attach this script to the Left Hand and to the Right Hand
+//This script will use the LineRenderer as a visual for the player to select objects (here the StatCube flagged object).
 //Note: vrRig is the position of our feet.
 public class XRLaserSelection : MonoBehaviour
 {
     //We are moving the VRRig, so we need a reference to it
     public Transform vrRig; //Fill up the slot in the Inspector
+
+    //We need to deactivate/reactivate the XRLocomotion script component when we go up/down
+    public GameObject leftHand, rightHand;
 
     //We want the LineRenderer to point where we are pointing
     public LineRenderer line; //Fill up the slot in the Inspector
@@ -21,9 +24,16 @@ public class XRLaserSelection : MonoBehaviour
     //A list of all transforms for the 360 spheres. Used when user is pointing laser at the "Next" panel inside the sphere.
     public List<Transform> listOf360SpheresTransforms = new List<Transform>();
 
-    //We need the initial positions at the entries of each gallery
+    //We need the positions of interest at the entry of each gallery
     public Transform inFrontOfPM;
     public Transform inFrontOfRS;
+
+    //We also need the positions of the "Fly" location (up and down)
+    public Transform abovePMLocation;
+    public Transform aboveRSLocation;
+    public Transform aboveMiddleLocation;
+    public Transform groundPMLocation;
+    public Transform groundRSLocation;
 
     //Last position hit by the RayCast
     private Vector3 hitPosition; //A Vector3 declaration always initialises the vector to the origin
@@ -31,12 +41,8 @@ public class XRLaserSelection : MonoBehaviour
     //When linerenderer hits this stats cube, we show the canvas.
     private GameObject cubeGO, cubePerVisitorGO;
 
-    private bool triggerPulled = false;
-
     //We need to "Raycast" sense the trajectory of the laser beam (the LineRenderer object named line), i.e. where we are pointing.
     private RaycastHit hit; //will contain info about what we are pointing at and the position that is hit by the laser.
-
-    ////bool hitIsValid = false; //To let us know if we hit a valid StatsCube collider.
 
     private void Start()
     {
@@ -44,22 +50,26 @@ public class XRLaserSelection : MonoBehaviour
         cubePerVisitorGO = GameObject.FindGameObjectWithTag("PerUserStatCube"); //For stats per visitor
 
         line.enabled = false;
-        triggerPulled = false;
 
         line.SetPosition(0, this.transform.position);
         line.SetPosition(1, this.transform.forward * 40f);
     }
 
+    //When we go up, we need to disable the XRLocomotion script and reenable it after we go back down
+    //This script will be used for thi spurpose
+    private void EnableXRLocomotion(bool enableLoco)
+    {
+        rightHand.GetComponent<XRLocomotion>().enabled = enableLoco;
+        leftHand.GetComponent<XRLocomotion>().enabled  = enableLoco;
+    }
+
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //We need to define a start point at everyframe for the line object (start point = position of our right hand)
         line.SetPosition(0, this.transform.position); //Remember the Positions Indexes (0 for start position and 1 for end position)
 
-        //This code should only run when we press the index trigger button (which is an axis providing a value from 0 to 1)
-        //if ( (Input.GetAxis(laserButtonName)>0.5f  && triggerPulled == false) )
-
-        if (Input.GetAxis(laserButtonName)> 0.5f)
+        if (Input.GetAxis(laserButtonName) > 0.5f)
         {
             //triggerPulled = true;
             line.enabled = true; //Activate the Line renderer object so that it is visible
@@ -81,13 +91,14 @@ public class XRLaserSelection : MonoBehaviour
         }
         //This code should only run when we release the laser button. If button is released, lets display 
         //   the StatisticsCanvas (and disable the laser)
-        else if (Input.GetAxis(laserButtonName)<0.5f)
+        else if (Input.GetAxis(laserButtonName) < 0.5f)
         {
             //Disable the laser line. Check the corresponding slot in the Inspector
             line.enabled = false;
 
             //Deactivate the StatisticsCanvas
             cubeGO.GetComponent<Statistics>().DisplayStatisticsCanvas(false);
+            cubePerVisitorGO.GetComponent<StatisticsCanvasPerUser>().DisplayStatisticsCanvas(false);
         }
     }
 
@@ -107,6 +118,8 @@ public class XRLaserSelection : MonoBehaviour
 
             //Moving VRRig to next room
             case "GoToNext":
+                //Make sure XRLocomotion script is enabled
+                EnableXRLocomotion(true);
                 //The Next sign inside the current sphere has been hit
                 //Remember that the list is a list of Transform, not a list of GameObject
                 //NOTE: Do not use the GetComponentInParent() method as it will start searching on the given object and not on the first
@@ -124,36 +137,78 @@ public class XRLaserSelection : MonoBehaviour
 
                 if (go != null)
                 {
-                    //Wait 2s before going to next room
-                    StartCoroutine(DelayRoutine(2.0f));
-
                     //Move the vrRig to the next position (next room or next index in the list)
                     vrRig.transform.position = listOf360SpheresTransforms[indexOfCurrent360Sphere + 1].position;
                 }
                 break;
 
-                //Moving VRRig to the entrance of the P. Monnin gallery 
-                // (meaning that the P. Monnin sign inside the sphere has been hit by the raycast (laser))
+            //Moving VRRig to the entrance of the P. Monnin gallery (meaning that the P. Monnin sign inside the sphere has been hit by the raycast (laser))
             case "GoToPM":
-                //Wait 2s before going in front of PM's gallery
-                StartCoroutine(DelayRoutine(2.0f));
-                //Move the vrRig to the next position (next room or next index in the list)
+                //Move the vrRig to the entrance of the P. Monnin gallery
                 vrRig.transform.position = inFrontOfPM.position;
+                //Make sure XRLocomotion script is enabled
+                EnableXRLocomotion(true);
                 break;
 
-            //Moving VRRig to the entrance of the R. Stephenson gallery
-            // (meaning that the R. Stephenson sign inside the sphere has been hit by the raycast (laser))
+            //Moving VRRig to the entrance of the R. Stephenson gallery (meaning that the R. Stephenson sign inside the sphere has been hit by the raycast (laser))
             case "GoToRS":
-                //Wait 2s before going in front of PM's gallery
-                StartCoroutine(DelayRoutine(2.0f));
-                //Move the vrRig to the next position (next room or next index in the list)
+                //Move the vrRig to the entrance of the R. Stephenson gallery
                 vrRig.transform.position = inFrontOfRS.position;
+                //Make sure XRLocomotion script is enabled
+                EnableXRLocomotion(true);
+                break;
+
+            //Moving VRRig to one of the platforms above the scene
+            // (meaning that an object flagged as "Fly" has been hit by the raycast (laser))
+            case "FlyAbovePM":
+                //Make sure XRLocomotion script is enabled
+                EnableXRLocomotion(false);
+                //Move the vrRig to the position (and height) of the hit platform
+                //Note on Lerp: you do not "detect when Lerp is done. Instead, you call Lerp repeatedly, every frame, 
+                //   and each time you tell it how done it is
+                vrRig.transform.position = Vector3.Lerp(vrRig.transform.position, abovePMLocation.transform.position, Time.deltaTime);
+                break;
+
+            case "FlyAboveRS":
+                //Make sure XRLocomotion script is enabled
+                EnableXRLocomotion(false);
+                //Move the vrRig to the position s(and height) of the hit platform
+                vrRig.transform.position = Vector3.Lerp(vrRig.transform.position, aboveRSLocation.transform.position, Time.deltaTime);
+                break;
+
+            case "FlyAboveMiddle":
+                //Make sure XRLocomotion script is enabled
+                EnableXRLocomotion(false);
+                //Move the vrRig to the position (and height) of the hit platform
+                vrRig.transform.position = Vector3.Lerp(vrRig.transform.position, aboveMiddleLocation.transform.position, Time.deltaTime);
+                break;
+
+            case "FlyGroundPM":
+                //Progressively (Lerp) move the vrRig to the position (and height) of the hit platform
+                vrRig.transform.position = Vector3.Lerp(vrRig.transform.position, groundPMLocation.transform.position, Time.deltaTime);
+                //Make sure XRLocomotion script is (re)-enabled, only when Lerp is completed i.e. when we have arrived to the destination.
+                if (Vector3.Distance(vrRig.transform.position, groundPMLocation.transform.position) <= 2.0f)
+                {
+                    EnableXRLocomotion(true);
+                }
+                break;
+
+            case "FlyGroundRS":
+                //Move the vrRig to the position (and height) of the hit platform
+                vrRig.transform.position = Vector3.Lerp(vrRig.transform.position, groundRSLocation.transform.position, Time.deltaTime);
+                //Make sure XRLocomotion script is enabled
+                //Make sure XRLocomotion script is (re)-enabled, only when Lerp is completed i.e. when we have arrived to the destination.
+                if (Vector3.Distance(vrRig.transform.position, groundRSLocation.transform.position) <= 2.0f)
+                {
+                    EnableXRLocomotion(true);
+                }
+                break;
+
+            //Exiting the application
+            // (meaning that the exit sphere has been hit by the raycast (laser))
+            case "Exit":
+                Application.Quit();
                 break;
         }
-    }
-
-    private IEnumerator DelayRoutine(float delay)
-    {
-        yield return new WaitForSeconds(delay);
     }
 }

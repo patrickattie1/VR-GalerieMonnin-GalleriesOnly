@@ -7,30 +7,58 @@ public class TestScript : MonoBehaviour
     //We are moving th XRRig, so we need a reference to it
     public Transform vrRig; //Fill up the slot in the Inspector
 
-    //A list of all transforms for the 360 spheres. Used when user is pointing laser at the "Next" panel inside the sphere.
-    public List<Transform> listOf360SpheresTransforms = new List<Transform>();
+    //We also need the positions of the "Fly" location (up and down)
+    public Transform abovePMLocation;
+    public Transform aboveRSLocation;
+    public Transform groundPMLocation;
 
     public Transform hitRole;
 
     // Update is called once per frame
     void Update()
     {
-        Transform go = hitRole.transform.parent; //Get the parent's transform (the transform of the sphere gameobject) of the hit sign
-
-        Debug.Log("hitRole is: " + hitRole.name);
-        Debug.Log("go is: " + go.name);
-        Debug.Log("Inititial VRRig position is: " + vrRig.transform.position);
-
-        if (go != null)
+        if (Input.GetKey(KeyCode.P))
         {
-            //Get the index of the current room's transform s(360 sphere) in the list for the "go" transform
-            int indexOfCurrent360Sphere = listOf360SpheresTransforms.IndexOf(go);
-            Debug.Log("Index is: " + indexOfCurrent360Sphere);
-
-            //Move the vrRig to the new position (next room or next index in the list)
-            vrRig.transform.position = listOf360SpheresTransforms[indexOfCurrent360Sphere + 1].position;
-            Debug.Log("VRRig position is: " + vrRig.transform.position);
-
+            ManageRaycast(hitRole);
         }
+    }
+
+    private void ManageRaycast(Transform h)
+    {
+        switch (h.tag)
+        {
+            //Moving VRRig to one of the platforms above the scene
+            // (meaning that an object flagged as "Fly" has been hit by the raycast (laser))
+            case "FlyAbovePM":
+                Debug.Log("FlyAbovePM");
+                //Wait 2s before going up
+                StartCoroutine(DelayRoutine(2.0f));
+
+                //Move the vrRig to the position (and height) of the hit platform
+                vrRig.transform.position = abovePMLocation.position;
+                break;
+
+            case "FlyAboveRS":
+                Debug.Log("FlyAboveRS");
+                //Wait 2s before going up
+                StartCoroutine(DelayRoutine(2.0f));
+
+                //Move the vrRig to the position (and height) of the hit platform
+                vrRig.transform.position = aboveRSLocation.position;
+                break;            
+
+            case "FlyGroundPM":
+                Debug.Log("FlyGroundPM");
+                //Wait 2s before going up
+                StartCoroutine(DelayRoutine(2.0f));
+
+                //Move the vrRig to the position (and height) of the hit platform
+                vrRig.transform.position = groundPMLocation.position;
+                break;
+        }
+    }
+    private IEnumerator DelayRoutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
     }
 }

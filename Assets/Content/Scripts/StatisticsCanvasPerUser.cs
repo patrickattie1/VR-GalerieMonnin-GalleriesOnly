@@ -20,7 +20,7 @@ public class StatisticsCanvasPerUser : MonoBehaviour
     //We need the vrRig object to make sure the canvas "looks" at it when displayed
     public GameObject vrRig;
 
-    public Canvas statisticsCanvas;
+    public Canvas statisticsPerUserCanvas;
 
     private void Awake()
     {
@@ -55,11 +55,11 @@ public class StatisticsCanvasPerUser : MonoBehaviour
     //This method is called when the trigger button is "pushed"
     public void DisplayStatisticsCanvas(bool canvasVisible)
     {
-        statisticsCanvas.gameObject.SetActive(canvasVisible); //Make the stats canvas visible/invisible
+        statisticsPerUserCanvas.gameObject.SetActive(canvasVisible); //Make the stats canvas visible/invisible
 
         //Make sure the stats canvas is always directed towards the VRRig for easy reading
-        statisticsCanvas.transform.LookAt(vrRig.transform.position);
-        statisticsCanvas.transform.Rotate(Vector3.up, 180);
+        statisticsPerUserCanvas.transform.LookAt(vrRig.transform.position);
+        statisticsPerUserCanvas.transform.Rotate(Vector3.up, 180);
 
         if (canvasVisible == true)
         {

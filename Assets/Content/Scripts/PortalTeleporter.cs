@@ -23,11 +23,11 @@ public class PortalTeleporter : MonoBehaviour
             Vector3 portalToPlayer = player.position - transform.position;
             float dotProduct = Vector3.Dot(transform.up, portalToPlayer);
 
-            Debug.Log("DP is: " + dotProduct);
+            ////Debug.Log("DP is: " + dotProduct);
 
             if (dotProduct < 0f) // The Player has just crossed the portal
             {
-                Debug.Log("DP is negative");
+                ////Debug.Log("DP is negative");
                 //****Fix the rotation
                 //Align the player with the orientation of the destination portal
                 float rotationDifference = -Quaternion.Angle(transform.rotation, receiverPortal.rotation);
@@ -41,7 +41,6 @@ public class PortalTeleporter : MonoBehaviour
                 Vector3 positionOffset = Quaternion.Euler(0f, rotationDifference, 0f) * portalToPlayer;
                 //Make sure the Player is teleported a few meters further than the ReceiveRPortal so that it does not loop back and forth between portals.
                 player.position = receiverPortal.position + positionOffset - receiverPortal.forward * 3.0f; ;
-                Debug.Log("player.position is: " + player.position);
 
                 playerIsOverlapping = false;
             }
