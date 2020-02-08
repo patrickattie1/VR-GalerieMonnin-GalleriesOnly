@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Haptics;
 
 //This script is attached to each of the collider planes
 public class PortalTeleporter : MonoBehaviour
@@ -13,7 +14,13 @@ public class PortalTeleporter : MonoBehaviour
 
     private bool playerIsOverlapping = false;
 
-    // Update is called once per frame
+    //We need to use the Vibrate method in the OculusHapticsController.cs script (attached to Left/Right Hand)
+    //Uncomment for left controller haptics
+    ////[SerializeField]
+    ////OculusHapticsController leftControllerHaptics;
+    [SerializeField]
+    OculusHapticsController rightControllerHaptics;
+
     void FixedUpdate()
     {
         if (playerIsOverlapping)
@@ -27,6 +34,11 @@ public class PortalTeleporter : MonoBehaviour
 
             if (dotProduct < 0f) // The Player has just crossed the portal
             {
+                //Vibrate the left/right hand controller
+                ////leftControllerHaptics.Vibrate(VibrationForce.Hard);
+                rightControllerHaptics.Vibrate(VibrationForce.Hard);
+                OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.RTouch);
+
                 ////Debug.Log("DP is negative");
                 //****Fix the rotation
                 //Align the player with the orientation of the destination portal
@@ -40,7 +52,7 @@ public class PortalTeleporter : MonoBehaviour
                 //  (this vector has already been calculated before with the portalToPlayer vector).
                 Vector3 positionOffset = Quaternion.Euler(0f, rotationDifference, 0f) * portalToPlayer;
                 //Make sure the Player is teleported a few meters further than the ReceiveRPortal so that it does not loop back and forth between portals.
-                player.position = receiverPortal.position + positionOffset - receiverPortal.forward * 3.0f; ;
+                player.position = receiverPortal.position + positionOffset - receiverPortal.forward * 3.0f;
 
                 playerIsOverlapping = false;
             }

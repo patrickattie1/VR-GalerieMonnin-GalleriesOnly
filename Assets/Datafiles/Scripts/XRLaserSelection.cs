@@ -35,6 +35,11 @@ public class XRLaserSelection : MonoBehaviour
     public Transform groundPMLocation;
     public Transform groundRSLocation;
 
+    //We also need access to the billboards
+    public GameObject inTheAirBillboardPM; //The billboard above the PM fly platform
+    public GameObject inTheAirBillboardRS; //The billboard above the RS fly platform
+    public GameObject inTheAirBillboardMiddle; //The billboard above the Middle fly platform
+
     //Last position hit by the RayCast
     private Vector3 hitPosition; //A Vector3 declaration always initialises the vector to the origin
 
@@ -53,6 +58,10 @@ public class XRLaserSelection : MonoBehaviour
 
         line.SetPosition(0, this.transform.position);
         line.SetPosition(1, this.transform.forward * 40f);
+
+        //Make sure all "in the air" billboards are initially not visible
+        DisableAllInTheAirBillboards();
+
     }
 
     //When we go up, we need to disable the XRLocomotion script and reenable it after we go back down
@@ -61,6 +70,13 @@ public class XRLaserSelection : MonoBehaviour
     {
         rightHand.GetComponent<XRLocomotion>().enabled = enableLoco;
         leftHand.GetComponent<XRLocomotion>().enabled  = enableLoco;
+    }
+
+    private void DisableAllInTheAirBillboards()
+    {
+        inTheAirBillboardPM.SetActive(false);
+        inTheAirBillboardRS.SetActive(false);
+        inTheAirBillboardMiddle.SetActive(false);
     }
 
     // Update is called once per frame
@@ -118,6 +134,8 @@ public class XRLaserSelection : MonoBehaviour
 
             //Moving VRRig to next room
             case "GoToNext":
+                //Allways start by disabling in the air billboards
+                DisableAllInTheAirBillboards();
                 //Make sure XRLocomotion script is enabled
                 EnableXRLocomotion(true);
                 //The Next sign inside the current sphere has been hit
@@ -138,12 +156,19 @@ public class XRLaserSelection : MonoBehaviour
                 if (go != null)
                 {
                     //Move the vrRig to the next position (next room or next index in the list)
-                    vrRig.transform.position = listOf360SpheresTransforms[indexOfCurrent360Sphere + 1].position;
+                    ////vrRig.transform.position = listOf360SpheresTransforms[indexOfCurrent360Sphere + 1].position;
+
+                    //Make current sphere invisible
+                    listOf360SpheresTransforms[indexOfCurrent360Sphere].gameObject.SetActive(false);
+                    //Make next sphere visible
+                    listOf360SpheresTransforms[indexOfCurrent360Sphere + 1].gameObject.SetActive(true);
                 }
                 break;
 
             //Moving VRRig to the entrance of the P. Monnin gallery (meaning that the P. Monnin sign inside the sphere has been hit by the raycast (laser))
             case "GoToPM":
+                //Allways start by disabling in the air billboards
+                DisableAllInTheAirBillboards();
                 //Move the vrRig to the entrance of the P. Monnin gallery
                 vrRig.transform.position = inFrontOfPM.position;
                 //Make sure XRLocomotion script is enabled
@@ -152,6 +177,8 @@ public class XRLaserSelection : MonoBehaviour
 
             //Moving VRRig to the entrance of the R. Stephenson gallery (meaning that the R. Stephenson sign inside the sphere has been hit by the raycast (laser))
             case "GoToRS":
+                //Allways start by disabling in the air billboards
+                DisableAllInTheAirBillboards();
                 //Move the vrRig to the entrance of the R. Stephenson gallery
                 vrRig.transform.position = inFrontOfRS.position;
                 //Make sure XRLocomotion script is enabled
@@ -167,6 +194,12 @@ public class XRLaserSelection : MonoBehaviour
                 //Note on Lerp: you do not "detect when Lerp is done. Instead, you call Lerp repeatedly, every frame, 
                 //   and each time you tell it how done it is
                 vrRig.transform.position = Vector3.Lerp(vrRig.transform.position, abovePMLocation.transform.position, Time.deltaTime);
+                //Make sure corresponding Billboard is made visible, only when Lerp is completed i.e. when we have arrived to the destination.
+                if (Vector3.Distance(vrRig.transform.position, abovePMLocation.transform.position) <= 7.0f)
+                {
+                    DisableAllInTheAirBillboards();
+                    inTheAirBillboardPM.SetActive(true);
+                }
                 break;
 
             case "FlyAboveRS":
@@ -174,6 +207,12 @@ public class XRLaserSelection : MonoBehaviour
                 EnableXRLocomotion(false);
                 //Move the vrRig to the position s(and height) of the hit platform
                 vrRig.transform.position = Vector3.Lerp(vrRig.transform.position, aboveRSLocation.transform.position, Time.deltaTime);
+                //Make sure corresponding Billboard is made visible, only when Lerp is completed i.e. when we have arrived to the destination.
+                if (Vector3.Distance(vrRig.transform.position, aboveRSLocation.transform.position) <= 7.0f)
+                {
+                    DisableAllInTheAirBillboards();
+                    inTheAirBillboardRS.SetActive(true);
+                }
                 break;
 
             case "FlyAboveMiddle":
@@ -181,26 +220,33 @@ public class XRLaserSelection : MonoBehaviour
                 EnableXRLocomotion(false);
                 //Move the vrRig to the position (and height) of the hit platform
                 vrRig.transform.position = Vector3.Lerp(vrRig.transform.position, aboveMiddleLocation.transform.position, Time.deltaTime);
+                //Make sure corresponding Billboard is made visible, only when Lerp is completed i.e. when we have arrived to the destination.
+                if (Vector3.Distance(vrRig.transform.position, aboveMiddleLocation.transform.position) <= 7.0f)
+                {
+                    DisableAllInTheAirBillboards();
+                    inTheAirBillboardMiddle.SetActive(true);
+                }
                 break;
 
             case "FlyGroundPM":
-                //Progressively (Lerp) move the vrRig to the position (and height) of the hit platform
+                //Progressively (Lerp) move the vrRig to the position (and height) of the groundPMLocation platform
                 vrRig.transform.position = Vector3.Lerp(vrRig.transform.position, groundPMLocation.transform.position, Time.deltaTime);
                 //Make sure XRLocomotion script is (re)-enabled, only when Lerp is completed i.e. when we have arrived to the destination.
-                if (Vector3.Distance(vrRig.transform.position, groundPMLocation.transform.position) <= 2.0f)
+                if (Vector3.Distance(vrRig.transform.position, groundPMLocation.transform.position) <= 7.0f)
                 {
                     EnableXRLocomotion(true);
+                    DisableAllInTheAirBillboards();
                 }
                 break;
 
             case "FlyGroundRS":
-                //Move the vrRig to the position (and height) of the hit platform
+                //Progressively (Lerp) move the vrRig to the position (and height) of the groundRSLocation platform
                 vrRig.transform.position = Vector3.Lerp(vrRig.transform.position, groundRSLocation.transform.position, Time.deltaTime);
-                //Make sure XRLocomotion script is enabled
                 //Make sure XRLocomotion script is (re)-enabled, only when Lerp is completed i.e. when we have arrived to the destination.
-                if (Vector3.Distance(vrRig.transform.position, groundRSLocation.transform.position) <= 2.0f)
+                if (Vector3.Distance(vrRig.transform.position, groundRSLocation.transform.position) <= 7.0f)
                 {
                     EnableXRLocomotion(true);
+                    DisableAllInTheAirBillboards();
                 }
                 break;
 
