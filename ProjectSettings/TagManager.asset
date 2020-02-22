@@ -17,8 +17,7 @@ TagManager:
   - FlyAbovePM
   - FlyAboveRS
   - FlyAboveMiddle
-  - FlyGroundRS
-  - FlyGroundPM
+  - LerpOnTheGround
   layers:
   - Default
   - TransparentFX
