@@ -1,8 +1,8 @@
-# VR-Galerie Monnin, Virtual Photos Exhibition from M. Roberto STEPHENSON and Virtual Painting Exhibition from Mrs Pascale MONNIN, January 2019
+# VR-Galerie Monnin, Virtual Photos Exhibition from M. Roberto STEPHENSON and Associated Conference Room, January 2019
 
 Created for the Galerie Monnin, following the Haiti Tech Summit, in July 2019.
 
-The idea is to allow the user to immerse himself/herself inside a virtual gallery showcasing the work of renown Haitian artists.
+The idea is to allow the user to immerse himself/herself inside a virtual gallery showcasing the work of renown Haitian artists. This is a typical gallery developed for a Haitian artist.
 
 In VR, using an Oculus Quest head mounted display and both its hand controllers (left and right), the user can:
 - Use the thumbstick on the hand controllers to move around the main scene;
@@ -14,6 +14,7 @@ In VR, using an Oculus Quest head mounted display and both its hand controllers 
 Inside the gallery, the user can see 
 - Videos applied as textures on virtual movie screens
 - Avatars integrated into the virtual gallery.
+- Development in progress: network several visitors and allow them to go to a (virtual) conference room to attend real time events
 
 This VR application was designed using Unity 2019.2.9f1.
 
