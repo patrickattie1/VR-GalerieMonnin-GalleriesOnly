@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1037670176858642}
   m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5, w: -0.5}
   m_LocalPosition: {x: -0.23225863, y: -0.0029023138, z: -0.0012560232}
-  m_LocalScale: {x: 0.07720499, y: 0.10174595, z: 0.18930766}
+  m_LocalScale: {x: 1, y: 1, z: 0.18930766}
   m_Children: []
   m_Father: {fileID: 8782669825747812657}
   m_RootOrder: 0
@@ -45,6 +45,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -126,6 +127,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -164,7 +166,8 @@ TextMesh:
 
     Photograph 30x30
 
-    Acrylic Prints on Dibond
+    Acrylic
+    Prints on Dibond
 
 
     USD 950'
@@ -207,8 +210,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1587074469709432}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: -9.72, y: -1.49, z: -21.21}
-  m_LocalScale: {x: 1, y: 1.957, z: 1.388441}
+  m_LocalPosition: {x: -9.72, y: -1.224, z: -21.825}
+  m_LocalScale: {x: 1, y: 1, z: 1.1982245}
   m_Children:
   - {fileID: 8782669825747812657}
   - {fileID: 4898082057071184}
@@ -237,6 +240,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -317,6 +321,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -369,8 +374,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7605664752493035757}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.16, y: -0.031, z: 2.489}
-  m_LocalScale: {x: 0.16827187, y: 1.8015212, z: 1.7247502}
+  m_LocalPosition: {x: -0.16, y: -0.034, z: 2.535}
+  m_LocalScale: {x: 0.4, y: 0.3, z: 0.29739234}
   m_Children:
   - {fileID: 4050697988767884}
   m_Father: {fileID: 4576478643222312}
@@ -398,6 +403,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

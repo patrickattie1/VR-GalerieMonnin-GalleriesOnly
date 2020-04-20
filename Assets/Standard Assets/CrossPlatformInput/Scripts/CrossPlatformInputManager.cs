@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput.PlatformSpecific;
+////using UnityStandardAssets.CrossPlatformInput.PlatformSpecific;
 
 namespace UnityStandardAssets.CrossPlatformInput
 {
@@ -21,8 +21,8 @@ namespace UnityStandardAssets.CrossPlatformInput
 
 		static CrossPlatformInputManager()
 		{
-			s_TouchInput = new MobileInput();
-			s_HardwareInput = new StandaloneInput();
+			////s_TouchInput = new MobileInput();
+			////s_HardwareInput = new StandaloneInput();
 #if MOBILE_INPUT
             activeInput = s_TouchInput;
 #else
